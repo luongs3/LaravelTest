@@ -24,7 +24,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             $data = $this->model->where('email', $email)->first();
 
             if (!$data) {
-                return ['error' => trans('message.item_not_exist')];
+                return ['error' => trans('messages.item_not_exist')];
             }
 
             return $data;

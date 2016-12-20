@@ -13,16 +13,17 @@ class LogoutTest extends TestCase
      */
     public function testLogout()
     {
-        $this->assertFalse($this->assertSessionHas('use'));
-        $this->assertRedirectedToRoute('users.get-login');
+        $this->setData();
+        $this->get('/logout')
+            ->assertSessionMissing('user')
+            ->assertRedirectedToRoute('users.get-login');
     }
 
     public function setData()
     {
-        session_start();
-        $_SESSION = [
+        Session::put([
             'email' => 'test5@gmail.com',
             'name' => 'test5'
-        ];
+        ]);
     }
 }

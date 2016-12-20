@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class UserAuthController extends Controller
 {
@@ -27,7 +28,6 @@ class UserAuthController extends Controller
             'password'
         ]);
         $result = $this->userRepository->store($data);
-
         if (isset($result['error'])) {
             return redirect()->route('users.get-register')->withError($result['error']);
         }
@@ -42,30 +42,29 @@ class UserAuthController extends Controller
 
     public function postLogin(Request $request)
     {
-        session_start();
         $user = $request->only([
             'email',
             'password'
         ]);
+
         $result = $this->userRepository->getUserByEmail($user['email']);
 
         if (isset($result['error'])) {
             return redirect()->route('users.get-register')->withError($result['error']);
         }
 
-        $_SESSION['user'] = [
+        Session::put('user', [
             'name' => $result->name,
             'email' => $result->email,
-        ];
+        ]);
 
         return redirect()->route('users.get-register')->withSuccess(trans('messages.login_successfully'));
     }
 
     public function logout()
     {
-        if (isset($_SESSION['user'])) {
-            session_start();
-            unset($_SESSION['user']);
+        if (Session::has('user')) {
+            Session::forget('user');
 
             return redirect()->route('users.get-login')->withSuccess(trans('messages.logout_successfully'));
         }

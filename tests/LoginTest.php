@@ -15,9 +15,17 @@ class LoginTest extends TestCase
     public function postLogin($data)
     {
         $this->post('/login', $data)
-            ->assertRedirectedToRoute('users.get-login')
+            ->assertRedirectedToRoute('users.get-register')
             ->assertSessionHas('success', trans('messages.login_successfully'))
-            ->assertSessionHas('user', $data);
+            ->assertSessionHas('user');
+    }
+
+    public function postLoginFail($data)
+    {
+        $this->post('/login', $data)
+            ->assertRedirectedToRoute('users.get-register')
+            ->assertSessionHas('error', trans('messages.item_not_exist'))
+            ->assertSessionMissing('user');
     }
 
     public function testPostLogin()
@@ -25,14 +33,18 @@ class LoginTest extends TestCase
         $data = $this->getData();
 
         $this->postLogin($data[0]);
+        Session::flush();
+        $this->postLoginFail($data[1]);
+        $this->postLoginFail($data[2]);
+        $this->postLoginFail($data[3]);
     }
 
     public function getData()
     {
         return [
             [
-                'email' => 'test5@gmail.com',
-                'password' => 'test4'
+                'email' => 'test1@gmail.com',
+                'password' => 'test1'
             ],
             [
                 'email' => 'test6@gmail.com',
