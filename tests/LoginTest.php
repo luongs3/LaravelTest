@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class LoginTest extends TestCase
 {
-    use DatabaseTransactions;
+//    use DatabaseTransactions;
     /**
      * A basic test example.
      *
@@ -35,8 +35,6 @@ class LoginTest extends TestCase
         $this->postLogin($data[0]);
         Session::flush();
         $this->postLoginFail($data[1]);
-        $this->postLoginFail($data[2]);
-        $this->postLoginFail($data[3]);
     }
 
     public function getData()
@@ -47,16 +45,8 @@ class LoginTest extends TestCase
                 'password' => 'test1'
             ],
             [
-                'email' => 'test6@gmail.com',
-                'password' => 'test5'
-            ],
-            [
-                'email' => 'test7@gmail.com',
-                'password' => ''
-            ],
-            [
-                'email' => '',
-                'password' => 'test7'
+                'email' => 'test2@gmail.com',
+                'password' => 'abc'
             ]
         ];
     }

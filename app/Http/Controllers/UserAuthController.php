@@ -28,6 +28,7 @@ class UserAuthController extends Controller
             'password'
         ]);
         $result = $this->userRepository->store($data);
+
         if (isset($result['error'])) {
             return redirect()->route('users.get-register')->withError($result['error']);
         }
