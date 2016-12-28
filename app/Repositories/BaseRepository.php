@@ -12,18 +12,14 @@ use Carbon\Carbon;
 use Exception;
 use DB;
 
-abstract class BaseRepository implements BaseRepositoryInterface
+class BaseRepository implements BaseRepositoryInterface
 {
     protected $model;
 
-    public function show($id)
+    public function store($input)
     {
         try {
-            $data = $this->model->find($id);
-
-            if (!$data) {
-                return ['error' => trans('message.item_not_exist')];
-            }
+            $data = $this->model->create($input);
 
             return $data;
         } catch (Exception $ex) {
@@ -31,18 +27,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
         }
     }
 
-    public function store($input)
-    {
-        try {
-            $data = $this->model->create($input);
-
-            if (!$data) {
-                return ['error' => trans('message.creating_error')];
-            }
-
-            return $data;
-        } catch (Exception $ex) {
-            return ['error' => $ex->getMessage()];
-        }
+    public function setModel($model) {
+        $this->model = $model;
     }
 }

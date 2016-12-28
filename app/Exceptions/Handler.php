@@ -48,6 +48,7 @@ class Handler extends ExceptionHandler
     }
 
     /**
+     * @codeCoverageIgnore
      * Convert an authentication exception into an unauthenticated response.
      *
      * @param  \Illuminate\Http\Request  $request

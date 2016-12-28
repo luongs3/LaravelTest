@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -20,7 +22,7 @@ class UserAuthController extends Controller
         return view('users.auth.register');
     }
 
-    public function postRegister(Request $request)
+    public function postRegister(CreateUserRequest $request)
     {
         $data = $request->only([
             'name',
@@ -41,14 +43,14 @@ class UserAuthController extends Controller
         return view('users.auth.login');
     }
 
-    public function postLogin(Request $request)
+    public function postLogin(UpdateUserRequest $request)
     {
         $user = $request->only([
             'email',
             'password'
         ]);
 
-        $result = $this->userRepository->getUserByEmail($user['email']);
+        $result = $this->userRepository->getUserByEmail($user);
 
         if (isset($result['error'])) {
             return redirect()->route('users.get-register')->withError($result['error']);
@@ -62,10 +64,14 @@ class UserAuthController extends Controller
         return redirect()->route('users.get-register')->withSuccess(trans('messages.login_successfully'));
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
+
     public function logout()
     {
-        if (Session::has('user')) {
-            Session::forget('user');
+        if (\Auth::check()) {
+            \Auth::logout();
 
             return redirect()->route('users.get-login')->withSuccess(trans('messages.logout_successfully'));
         }

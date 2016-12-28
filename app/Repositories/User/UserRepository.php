@@ -18,15 +18,19 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         $this->model = $user;
     }
 
-    public function getUserByEmail($email)
+    public function getUserByEmail($user)
     {
         try {
-            $data = $this->model->where('email', $email)->first();
+            $data = $this->model->where(['email' => $user['email']])->first();
 
             if (!$data) {
                 return ['error' => trans('messages.item_not_exist')];
             }
 
+            if (!Hash::check($user['password'], $data['password'])) {
+                return ['error' => trans('messages.invalid_id_or_password')];
+            }
+            typeOf($data);
             return $data;
         } catch (Exception $ex) {
             return ['error' => $ex->getMessage()];

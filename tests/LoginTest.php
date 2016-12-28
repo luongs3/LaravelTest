@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class LoginTest extends TestCase
 {
-//    use DatabaseTransactions;
+    use DatabaseTransactions;
     /**
      * A basic test example.
      *
@@ -24,17 +24,36 @@ class LoginTest extends TestCase
     {
         $this->post('/login', $data)
             ->assertRedirectedToRoute('users.get-register')
-            ->assertSessionHas('error', trans('messages.item_not_exist'))
+            ->assertSessionMissing('success')
             ->assertSessionMissing('user');
     }
 
     public function testPostLogin()
     {
         $data = $this->getData();
+        $this->createFakeUserData();
 
         $this->postLogin($data[0]);
         Session::flush();
         $this->postLoginFail($data[1]);
+        Session::flush();
+        $this->postLoginFail($data[2]);
+    }
+
+    public function createFakeUserData()
+    {
+        \App\Models\User::insert([
+            [
+                'name' => 'test1',
+                'email' => 'test1@gmail.com',
+                'password' => bcrypt('test1'),
+            ],
+            [
+                'name' => 'test2',
+                'email' => 'test2@gmail.com',
+                'password' => bcrypt('test2'),
+            ]
+        ]);
     }
 
     public function getData()
@@ -46,8 +65,12 @@ class LoginTest extends TestCase
             ],
             [
                 'email' => 'test2@gmail.com',
-                'password' => 'abc'
-            ]
+                'password' => 'abc54545454'
+            ],
+            [
+                'email' => 'test1@gmail.com',
+                'password' => 'test2'
+            ],
         ];
     }
 }

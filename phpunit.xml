@@ -10,10 +10,15 @@
          stopOnFailure="false">
     <testsuites>
         <testsuite name="Application Test Suite">
-            <!--<directory suffix="Test.php">./tests</directory>-->
-            <file>tests/RegisterTest.php</file>
-            <file>tests/LoginTest.php</file>
-            <file>tests/LogoutTest.php</file>
+            <directory suffix="Test.php">./tests</directory>
+            <file>Register</file>
+            <file>Login</file>
+            <file>Logout</file>
+        </testsuite>
+        <testsuite name="Repository Test">
+            <directory>tests/Repositories</directory>
+            <file>UserRepositoryTest.php</file>
+            <file>BaseRepositoryTest.php</file>
         </testsuite>
     </testsuites>
     <filter>

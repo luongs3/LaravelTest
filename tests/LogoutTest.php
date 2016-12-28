@@ -14,10 +14,21 @@ class LogoutTest extends TestCase
     public function testLogout()
     {
         $this->setData();
+
         $this->get('/logout')
             ->assertSessionMissing('user')
             ->assertRedirectedToRoute('users.get-login');
     }
+
+    public function testLogoutFail()
+    {
+        Session::flush();
+
+        $this->get('/logout')
+            ->assertSessionMissing('user')
+            ->assertRedirectedToRoute('users.get-login');
+    }
+
 
     public function setData()
     {
